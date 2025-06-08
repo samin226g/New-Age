@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced Age Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 420px;
+      width: 90%;
+      padding: 20px;
+      box-shadow: 0 0 10px #ddd;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    select, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 30%;
+    }
+
+    button {
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Age Calculator</h1>
+    <label>Select Your Date of Birth:</label><br>
+    <select id="day"></select>
+    <select id="month"></select>
+    <select id="year"></select><br>
+    <button onclick="calculateAge()">Calculate Age</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const daySelect = document.getElementById("day");
+    const monthSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+
+    // Fill days
+    for (let i = 1; i <= 31; i++) {
+      let opt = document.createElement("option");
+      opt.value = i;
+      opt.text = i;
+      daySelect.appendChild(opt);
+    }
+
+    // Fill months
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    months.forEach((month, index) => {
+      let opt = document.createElement("option");
+      opt.value = index;
+      opt.text = month;
+      monthSelect.appendChild(opt);
+    });
+
+    // Fill years
+    for (let i = new Date().getFullYear(); i >= 1900; i--) {
+      let opt = document.createElement("option");
+      opt.value = i;
+      opt.text = i;
+      yearSelect.appendChild(opt);
+    }
+
+    function calculateAge() {
+      const day = parseInt(daySelect.value);
+      const month = parseInt(monthSelect.value);
+      const year = parseInt(yearSelect.value);
+
+      const dob = new Date(year, month, day);
+      const now = new Date();
+
+      if (isNaN(dob.getTime())) {
+        document.getElementById("result").innerText = "Please select a valid date.";
+        return;
+      }
+
+      let diff = now - dob;
+      if (diff < 0) {
+        document.getElementById("result").innerText = "Future date is not allowed.";
+        return;
+      }
+
+      let seconds = Math.floor(diff / 1000);
+      let minutes = Math.floor(seconds / 60);
+      let hours = Math.floor(minutes / 60);
+      let days = Math.floor(hours / 24);
+      let weeks = Math.floor(days / 7);
+      let monthsPassed = Math.floor(days / 30.44); // average month length
+      let yearsPassed = Math.floor(monthsPassed / 12);
+
+      document.getElementById("result").innerHTML = `
+        <strong>Your Age:</strong><br>
+        Years: ${yearsPassed}<br>
+        Months: ${monthsPassed}<br>
+        Weeks: ${weeks}<br>
+        Days: ${days}<br>
+        Hours: ${hours}<br>
+        Minutes: ${minutes}<br>
+        Seconds: ${seconds}
+      `;
+    }
+  </script>
+
+</body>
+</html>
